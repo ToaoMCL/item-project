@@ -8,11 +8,13 @@
     <div class='form'>
         <form method='POST' action=''>
             {{ form.hidden_tag() }} 
-            {{ form.read_table.label }} {{ form.read_table}}    
+            {{ form.active_table.label }} {{ form.active_table}} {{ form.submit }}
             <br>
-            {{ form.submit }}
-            <br>
-            {{ message }}
+            {% for r in message %}
+            {{r}} <br>
+            {% endfor %}
+            
+            
         </form>
     </div>
 </body>
