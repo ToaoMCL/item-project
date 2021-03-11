@@ -5,19 +5,44 @@
 </head>
 
 <body>
-    <div class='form'>
-        <form method='POST' action=''>
+    <div class="form">
+        <form method="POST" action="">
             {{ form.hidden_tag() }} 
-            {{ form.active_table.label }} {{ form.active_table}} 
+            {{ form.active_table.label }} {{ form.active_table}} <br>
             {{ form.mode_select.label }} {{ form.mode_select }}
             {{ form.submit }}
-            <br>
+            <br> <br>
             {% if form.mode_select.data == "Read" %}
                 {% for r in message %}
                     {{r}} <br>
                 {% endfor %}
             {% elif form.mode_select.data == "Create" %}
-                Create
+                {% if form.active_table.data == "Item Types" %}
+                    <div class="create_form">
+                        <form method="POST" action="">
+                            {{ create_form.item_type_name.label }} {{ create_form.item_type_name }} <br>     
+                            {{ create_form.submit }}        
+                        </form>
+                    </div>
+                {% elif form.active_table.data == "Attributes" %}
+                    <div class="create_form">
+                        <form method="POST" action="">
+                            {{ create_form.attribute_name.label }} {{ create_form.attribute_name }} <br>
+                            {{ create_form.attribute_description.label }} {{ create_form.attribute_description }} <br>
+                            {{ create_form.submit }}
+                        </form>
+                    </div>
+                {% elif form.active_table.data == "Items" %}
+                    <div class="create_form">
+                        <form method="POST" action="">
+                            {{ create_form.item_name.label }} {{ create_form.item_name }} <br>
+                            {{ create_form.item_type.label }} {{ create_form.item_type }} <br>
+                            {{ create_form.submit }}
+                        </form>
+                    </div>
+                    
+                {% endif %}
+                
             {% elif form.mode_select.data == "Update" %}
                 Update
             {% elif form.mode_select.data == "Delete" %}

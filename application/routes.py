@@ -2,28 +2,32 @@ from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from application.models import Attributes, Items, ItemAttributes, ItemTypes
 from application import app, db
-from application.forms import ReadItemTypesForm
+from application.forms import InstructionDefenitionForm, CreateAttributeForm, CreateItemTypeForm, CreateItemForm
 
 
 @app.route("/", methods=["GET", "POST"])
 def home():
-    form = ReadItemTypesForm()
+    instruction_form = InstructionDefenitionForm()
+    create_item_type_form = None
     response = ""
     response_list = []
     if request.method == "POST":
-        response = form.active_table.data     
-        if form.active_table.data == "Attributes":
+        response = instruction_form.active_table.data     
+        if instruction_form.active_table.data == "Attributes":
+            create_item_type_form = CreateAttributeForm()
             response = db.session.query(Attributes).all()
             for i in response:
                 response_list.append((i.id, i.name, i.description))
-        if form.active_table.data == "Item Types":
+        if instruction_form.active_table.data == "Item Types":
+            create_item_type_form = CreateItemTypeForm()
             response = db.session.query(ItemTypes).all()
             for i in response:
                 response_list.append((i.id, i.name))
-        if form.active_table.data == "Items":
+        if instruction_form.active_table.data == "Items":
+            create_item_type_form = CreateItemForm()
             response = db.session.query(Items).all()
             for i in response:
                 response_list.append((i.id, i.name))
 
-    template = render_template("interface.html", form=form, message=response_list)
+    template = render_template("interface.html", form=instruction_form, create_form=create_item_type_form, message=response_list)
     return template
