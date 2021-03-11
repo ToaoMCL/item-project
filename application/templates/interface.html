@@ -46,7 +46,12 @@
             {% elif form.mode_select.data == "Update" %}
                 Update
             {% elif form.mode_select.data == "Delete" %}
-                Delete
+                <div class="delete_form">
+                    <form method="DELETE" action="">
+                        {{ delete_form.item_id.label }} {{ form.active_table.data}} {{ delete_form.item_id }} <br>
+                        {{ delete_form.submit }}
+                    </form>
+                </div>
             {% endif %}
             
             

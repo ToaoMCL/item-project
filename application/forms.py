@@ -23,4 +23,8 @@ class CreateItemForm(FlaskForm):
     item_type = IntegerField("Item Type ID")
     submit = SubmitField("Create New Item")
 
+class DeleteItemForm(FlaskForm):
+    item_id = IntegerField("Item id to delete from")
+    submit = SubmitField("Delete")
+
 
