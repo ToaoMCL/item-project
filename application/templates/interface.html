@@ -8,11 +8,21 @@
     <div class='form'>
         <form method='POST' action=''>
             {{ form.hidden_tag() }} 
-            {{ form.active_table.label }} {{ form.active_table}} {{ form.submit }}
+            {{ form.active_table.label }} {{ form.active_table}} 
+            {{ form.mode_select.label }} {{ form.mode_select }}
+            {{ form.submit }}
             <br>
-            {% for r in message %}
-            {{r}} <br>
-            {% endfor %}
+            {% if form.mode_select.data == "Read" %}
+                {% for r in message %}
+                    {{r}} <br>
+                {% endfor %}
+            {% elif form.mode_select.data == "Create" %}
+                Create
+            {% elif form.mode_select.data == "Update" %}
+                Update
+            {% elif form.mode_select.data == "Delete" %}
+                Delete
+            {% endif %}
             
             
         </form>
