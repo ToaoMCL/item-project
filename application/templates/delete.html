@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block functionality %}
+    <div class="delete_form">
+        <form method="POST" action="">
+            {{ delete_form.item_id.label }} {{ form.active_table.data}} {{ delete_form.item_id }} <br>
+            {{ delete_form.submit }}
+        </form>
+    </div>
+{% endblock functionality %}

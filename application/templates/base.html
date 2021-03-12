@@ -1,0 +1,18 @@
+<html>
+    <head>
+        <title>Simple form</title>
+    </head>
+    <body>
+        <div class="form">
+            <form method="POST" action="">
+                {{ form.hidden_tag() }} 
+                {{ form.active_table.label }} {{ form.active_table}} <br>
+                {{ form.mode_select.label }} {{ form.mode_select }}
+                {{ form.submit }}
+                <br> <br>
+                {% block functionality %}
+                {% endblock functionality %}                      
+            </form>
+        </div>
+    </body>
+</html>
