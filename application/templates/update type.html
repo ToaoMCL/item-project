@@ -1,0 +1,11 @@
+{% extends "update.html" %}
+
+{% block functionality %}
+    <div class="update_form">
+        <form method="POST" action="">
+            {{ update_form.item_type_id.label }} {{ update_form.item_type_id }} <br>
+            {{ update_form.new_type_name.label }} {{ update_form.new_type_name }} <br>
+            {{ update_form.submit }}
+        </form>
+    </div>
+{% endblock functionality %}

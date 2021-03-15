@@ -1,18 +1,18 @@
 <html>
     <head>
-        <title>Simple form</title>
+        <title>Item App</title>
     </head>
     <body>
-        <div class="form">
-            <form method="POST" action="">
-                {{ form.hidden_tag() }} 
-                {{ form.active_table.label }} {{ form.active_table}} <br>
-                {{ form.mode_select.label }} {{ form.mode_select }}
-                {{ form.submit }}
-                <br> <br>
-                {% block functionality %}
-                {% endblock functionality %}                      
-            </form>
-        </div>
+        {% block title %}
+        {% endblock title %}
+        <a href="/create">create</a> 
+        <a href="/read">read</a> 
+        <a href="/update">update</a> 
+        <a href="/delete">delete</a> <br>
+        {% block sublinks %}
+        {% endblock sublinks %}
+        <br> <br>
+        {% block functionality %}
+        {% endblock functionality %}                              
     </body>
 </html>

@@ -1,27 +1,12 @@
 {% extends "base.html" %}
-{% block functionality %}
-{% if form.active_table.data == "Item Types" %}
-    <div class="create_form">
-        <form method="POST" action="">
-            {{ create_form.item_type_name.label }} {{ create_form.item_type_name }} <br>
-            {{ create_form.submit }}
-        </form>
-    </div>
-    {% elif form.active_table.data == "Attributes" %}
-    <div class="create_form">
-        <form method="POST" action="">
-            {{ create_form.attribute_name.label }} {{ create_form.attribute_name }} <br>
-            {{ create_form.attribute_description.label }} {{ create_form.attribute_description }} <br>
-            {{ create_form.submit }}
-        </form>
-    </div>
-    {% elif form.active_table.data == "Items" %}
-    <div class="create_form">
-        <form method="POST" action="">
-            {{ create_form.item_name.label }} {{ create_form.item_name }} <br>
-            {{ create_form.item_type.label }} {{ create_form.item_type }} <br>
-            {{ create_form.submit }}
-        </form>
-    </div>
-{% endif %}
-{% endblock functionality %}
+
+{% block title %}
+    <h1>Create</h1>
+{% endblock title %}
+{% block sublinks %}
+    <a href="/create/attribute">attribute</a>
+    <a href="/create/type">item type</a>
+    <a href="/create/item">item</a>
+    <a href="/create/add attribute">add attribute</a>
+
+{% endblock sublinks %}

@@ -1,8 +1,13 @@
 {% extends "base.html" %}
+
+{% block title %}
+    <h1>Delete</h1>
+{% endblock title %}
 {% block functionality %}
     <div class="delete_form">
         <form method="POST" action="">
-            {{ delete_form.item_id.label }} {{ form.active_table.data}} {{ delete_form.item_id }} <br>
+            {{ delete_form.active_table.label }} {{ delete_form.active_table }} <br>
+            {{ delete_form.item_id.label }} {{ delete_form.item_id }} <br>
             {{ delete_form.submit }}
         </form>
     </div>
