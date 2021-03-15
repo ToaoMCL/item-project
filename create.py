@@ -1,5 +1,5 @@
-from models import Attributes, Items, ItemAttributes, ItemTypes
-from app import db
+from application.models import Attributes, Items, ItemAttributes, ItemTypes
+from application import db
 
 db.drop_all()
 db.create_all()

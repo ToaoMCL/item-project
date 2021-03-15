@@ -1,0 +1,11 @@
+{% extends "create.html" %}
+
+{% block functionality %}
+    <div class="create_form">
+        <form method="POST" action="">
+            {{ create_form.attribute_name.label }} {{ create_form.attribute_name }} <br>
+            {{ create_form.attribute_description.label }} {{ create_form.attribute_description }} <br>
+            {{ create_form.submit }}
+        </form>
+    </div>
+{% endblock functionality %}
