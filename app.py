@@ -1,9 +1,4 @@
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
+from application import app
 
-app = Flask(__name__)
-
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:zfz800y10u9iHEzv@35.242.151.175/world"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
-
-db = SQLAlchemy(app)
+if __name__ == "__main__":
+    app.run(debug=True, host='0.0.0.0')

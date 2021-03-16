@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <h1>Read</h1>
+{% endblock title %}
+{% block sublinks %}
+<a href="/read/attributes">attributes</a>
+<a href="/read/item types">types</a>
+<a href="/read/items">items</a>
+<a href="/read/item">item</a>
+{% endblock sublinks %}
+
+
+{% block functionality %}
+{% for r in message %}
+{{r}} <br>
+{% endfor %}
+{% endblock functionality %}
+

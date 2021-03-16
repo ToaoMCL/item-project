@@ -1,0 +1,18 @@
+<html>
+    <head>
+        <title>Item App</title>
+    </head>
+    <body>
+        {% block title %}
+        {% endblock title %}
+        <a href="/create">create</a> 
+        <a href="/read">read</a> 
+        <a href="/update">update</a> 
+        <a href="/delete">delete</a> <br>
+        {% block sublinks %}
+        {% endblock sublinks %}
+        <br> <br>
+        {% block functionality %}
+        {% endblock functionality %}                              
+    </body>
+</html>
