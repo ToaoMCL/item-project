@@ -18,6 +18,7 @@ def GetDbTableNameFromPassedValue(value):
         return None
 
 
+
 @app.route("/")
 @app.route("/read")
 def read():
@@ -30,6 +31,7 @@ def read_item_types():
     for i in response:
         response_list.append((i.id, i.name))   
     return render_template("read.html", message=response_list)
+
 
 @app.route("/read/attributes")
 def read_attributes():
