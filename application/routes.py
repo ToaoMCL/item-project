@@ -112,7 +112,7 @@ def update_attribute():
         if update_form.new_attribute_name.data != "":
             attribute.name = update_form.new_attribute_name.data
         if update_form.new_attribute_description.data != "":
-            attribute.name = update_form.new_attribute_description.data
+            attribute.description = update_form.new_attribute_description.data
         db.session.commit()
     return render_template("update attribute.html", update_form=update_form)
 
