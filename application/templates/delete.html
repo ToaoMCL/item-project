@@ -1,18 +1,24 @@
 {% extends "base.html" %}
 
 {% block title %}
-<<<<<<< HEAD
     <h1>Delete Page</h1>
-=======
-    <h1>Delete</h1>
->>>>>>> ffbb9cea01496a33d125697cd0c22ee08a115f04
+
 {% endblock title %}
 {% block functionality %}
     <div class="delete_form">
         <form method="POST" action="">
+            {{ delete_form.hidden_tag() }}
             {{ delete_form.active_table.label }} {{ delete_form.active_table }} <br>
             {{ delete_form.item_id.label }} {{ delete_form.item_id }} <br>
             {{ delete_form.submit }}
+            {% if delete_form.item_id.errors %}
+            <div class='error'>
+                {% for error in delete_form.item_id.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <br>
         </form>
     </div>
 {% endblock functionality %}
