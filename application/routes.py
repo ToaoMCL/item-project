@@ -3,21 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from application.models import Attributes, Items, ItemAttributes, ItemTypes
 from application import app, db
 from application.forms import ReadItemForm, AddAttributeToItemForm, CreateAttributeForm, CreateItemTypeForm, CreateItemForm, DeleteItemForm, UpdateAttributeForm, UpdateItemForm, UpdateItemTypeForm
-
-
-def GetDbTableNameFromPassedValue(value):
-    if value == "Attributes":
-        return Attributes
-    elif value == "Item Types":
-        return ItemTypes
-    elif value == "Items":
-        return Items
-    elif value == "Item Attributes":
-        return ItemAttributes
-    else:
-        return None
-
-
+from application.extra_functions import GetDbTableNameFromPassedValue
 
 @app.route("/")
 @app.route("/read")
@@ -53,7 +39,7 @@ def read_items():
 def read_item():
     response_list = []
     read_item_form = ReadItemForm()
-    if request.method == "POST":
+    if read_item_form.validate_on_submit():
         item = Items.query.filter_by(id=read_item_form.item_id.data).first()
         item_type = ItemTypes.query.filter_by(id=item.fk_item_type).first()
         response_list.append((item.name, item_type.name)) 
@@ -61,7 +47,6 @@ def read_item():
         for attribute in item_attributes:
             attribute_values = Attributes.query.filter_by(id=attribute.fk_attribute_id).first()
             response_list.append((attribute_values.name, attribute_values.description))
-
     return render_template("read item.html",read_item=read_item_form, message=response_list)
 
 
@@ -72,7 +57,7 @@ def create():
 @app.route("/create/attribute", methods=["GET", "POST"])
 def create_attribute():
     create_form = CreateAttributeForm()
-    if request.method == "POST":
+    if create_form.validate_on_submit():
         db.session.add(Attributes(name=create_form.attribute_name.data, description=create_form.attribute_description.data))
         db.session.commit()
     return render_template("create attribute.html", create_form=create_form)
@@ -80,7 +65,7 @@ def create_attribute():
 @app.route("/create/type", methods=["GET", "POST"])
 def create_type():
     create_form = CreateItemTypeForm()
-    if request.method == "POST":
+    if create_form.validate_on_submit():
         db.session.add(ItemTypes(name=create_form.item_type_name.data))
         db.session.commit()
     return render_template("create type.html", create_form=create_form)
@@ -88,7 +73,7 @@ def create_type():
 @app.route("/create/item", methods=["GET", "POST"])
 def create_item():
     create_form = CreateItemForm()
-    if request.method == "POST":
+    if create_form.validate_on_submit():
         db.session.add(Items(name=create_form.item_name.data, fk_item_type=create_form.item_type.data))   
         db.session.commit()
     return render_template("create item.html", create_form=create_form)
@@ -96,7 +81,7 @@ def create_item():
 @app.route("/create/add attribute", methods=["GET", "POST"])
 def create_attribute_link():
     create_form = AddAttributeToItemForm()
-    if request.method == "POST":
+    if create_form.validate_on_submit():
         db.session.add(ItemAttributes(fk_item_id=create_form.item_id.data ,fk_attribute_id=create_form.attribute_id.data))
         db.session.commit()
     return  render_template("create item attribute link.html", create_form=create_form)
@@ -109,7 +94,7 @@ def update():
 @app.route("/update/attribute", methods=["GET", "POST"])
 def update_attribute():
     update_form = UpdateAttributeForm()
-    if request.method == "POST":
+    if update_form.validate_on_submit():
         attribute = Attributes.query.filter_by(id=update_form.attribute_id.data).first()
         if update_form.new_attribute_name.data != "":
             attribute.name = update_form.new_attribute_name.data
@@ -121,7 +106,7 @@ def update_attribute():
 @app.route("/update/type", methods=["GET", "POST"])
 def update_type():
     update_form = UpdateItemTypeForm()
-    if request.method == "POST":
+    if update_form.validate_on_submit():
         item_type = ItemTypes.query.filter_by(id=update_form.item_type_id.data).first()
         item_type.name = update_form.new_type_name.data
         db.session.commit()
@@ -130,7 +115,7 @@ def update_type():
 @app.route("/update/item", methods=["GET", "POST"])
 def update_item():
     update_form = UpdateItemForm()
-    if request.method == "POST":
+    if update_form.validate_on_submit():
         item = Items.query.filter_by(id=update_form.item_id.data).first()
         if update_form.new_item_name.data != "":
             item.name = update_form.new_item_name.data
@@ -144,7 +129,7 @@ def update_item():
 @app.route("/delete", methods=["GET", "POST"])
 def delete():
     delete_form = DeleteItemForm()
-    if request.method == "POST":
+    if delete_form.validate_on_submit():
         table = GetDbTableNameFromPassedValue(delete_form.active_table.data)
         item = table.query.filter_by(id=delete_form.item_id.data).first()
         db.session.delete(item)
