@@ -2,14 +2,7 @@ from flask import url_for
 from flask_testing import TestCase
 from application import app, db
 from application.models import ItemTypes, Items, Attributes, ItemAttributes
-from application import routes
 
-def test_DbReturnFromString():
-    assert routes.GetDbTableNameFromPassedValue("Not a table") == None
-    assert routes.GetDbTableNameFromPassedValue("Attributes") == Attributes
-    assert routes.GetDbTableNameFromPassedValue("Item Types") == ItemTypes
-    assert routes.GetDbTableNameFromPassedValue("Items") == Items
-    assert routes.GetDbTableNameFromPassedValue("Item Attributes") == ItemAttributes
 
 class TestBase(TestCase):
     def create_app(self):
@@ -26,7 +19,7 @@ class TestBase(TestCase):
         t2 = ItemTypes(name="Sword")
         t3 = ItemTypes(name="Tool")
         a1 = Attributes(name="Magic", description="A magical item")
-        a2 = Attributes(name="Sharp", description="A sharp item")     
+        a2 = Attributes(name="Sharp", description="A sharp item")
         db.session.add(t1)
         db.session.add(t2)
         db.session.add(t3)
@@ -116,7 +109,7 @@ class TestAddType(TestBase):
         response = self.client.get(url_for("read_item_types"))
         self.assertEqual(response.status_code, 200)
         self.assertIn(b"Mace", response.data)
-    
+
 class TestAddAttribute(TestBase):
     def test_add_item_type(self):
         response = self.client.get(url_for("read_attributes"))
@@ -196,7 +189,7 @@ class TestDelete(TestBase):
         self.assertNotIn(b"Sword", response.data)
 
 class TestUpdateType(TestBase):
-    def test_delete(self):
+    def test_update_type(self):
         response = self.client.get(url_for("read_item_types"))
         self.assertEqual(response.status_code, 200)
         self.assertNotIn(b"Bow", response.data)
@@ -212,7 +205,7 @@ class TestUpdateType(TestBase):
         self.assertIn(b"Bow", response.data)
 
 class TestUpdateAttribute(TestBase):
-    def test_delete(self):
+    def test_update_attribute(self):
         response = self.client.get(url_for("read_attributes"))
         self.assertEqual(response.status_code, 200)
         self.assertNotIn(b"Butter Forged", response.data)
@@ -229,7 +222,7 @@ class TestUpdateAttribute(TestBase):
         self.assertIn(b"A magnificent item crafted through only the finest dairy products", response.data)
 
 class TestUpdateItem(TestBase):
-    def test_delete(self):
+    def test_update_item(self):
         response = self.client.get(url_for("read_items"))
         self.assertEqual(response.status_code, 200)
         self.assertNotIn(b"Hand of Vecna", response.data)
@@ -244,4 +237,3 @@ class TestUpdateItem(TestBase):
         response = self.client.get(url_for("read_items"))
         self.assertIn(b"Hand of Vecna", response.data)
         # self.assertIn(b"Tool", response.data)
-
