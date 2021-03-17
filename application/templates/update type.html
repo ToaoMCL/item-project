@@ -3,9 +3,26 @@
 {% block functionality %}
     <div class="update_form">
         <form method="POST" action="">
+            {{ update_form.hidden_tag() }}
             {{ update_form.item_type_id.label }} {{ update_form.item_type_id }} <br>
             {{ update_form.new_type_name.label }} {{ update_form.new_type_name }} <br>
             {{ update_form.submit }}
+            {% if update_form.item_type_id.errors %}
+            <div class='error'>
+                {% for error in update_form.item_type_id.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <br>
+            {% if update_form.new_type_name.errors %}
+            <div class='error'>
+                {% for error in update_form.new_type_name.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <br>
         </form>
     </div>
 {% endblock functionality %}

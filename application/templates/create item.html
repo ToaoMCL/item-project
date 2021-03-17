@@ -3,9 +3,26 @@
 {% block functionality %}
 <div class="create_form">
     <form method="POST" action="">
+        {{ create_form.hidden_tag() }}
         {{ create_form.item_name.label }} {{ create_form.item_name }} <br>
         {{ create_form.item_type.label }} {{ create_form.item_type }} <br>
         {{ create_form.submit }}
+        {% if create_form.item_name.errors %}
+        <div class='error'>
+            {% for error in create_form.item_id.errors %}
+            <span>{{ error }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <br>
+        {% if create_form.item_type.errors %}
+        <div class='error'>
+            {% for error in create_form.item_type.errors %}
+            <span>{{ error }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <br>
     </form>
 </div>
 {% endblock functionality %}
