@@ -21,7 +21,7 @@ class SymbolCheck:
         self.message = message
 
     def __call__(self, form, field):
-        _forbidenChars = "}{:;@~\|`¬.!@#$%^&*()-+?_=,<>/"
+        _forbidenChars = "}{:;@~|`¬.!@#$%^&*()-+?_=,<>/"
         for char in _forbidenChars:
             if char in field.data:
                 raise ValidationError(self.message)

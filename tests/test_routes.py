@@ -236,4 +236,5 @@ class TestUpdateItem(TestBase):
         self.assertEqual(response.status_code, 200)
         response = self.client.get(url_for("read_items"))
         self.assertIn(b"Hand of Vecna", response.data)
-        # self.assertIn(b"Tool", response.data)
+
+
