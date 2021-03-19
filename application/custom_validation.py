@@ -3,25 +3,12 @@ from application import db
 from application.extra_functions import GetDbTableNameFromPassedValue
 
 
-class IsNumericCheck:
-    def __init__(self, message=None):
-        if not message:
-            message = "Only whole numbers allowed"
-        self.message = message
-
-    def __call__(self, form, field):
-        if not str(field.data).isdigit():
-            raise ValidationError(self.message)
-
-
 class SymbolCheck:
-    def __init__(self, message=None):
-        if not message:
-            message = "No special characters or symbols allowed"
-        self.message = message
+    def __init__(self):
+        self.message = "No special characters or symbols allowed"
 
     def __call__(self, form, field):
-        _forbidenChars = "}{:;@~|`¬.!@#$%^&*()-+?_=,<>/"
+        _forbidenChars = "}{:;@~|`¬.!@£#$%^&*()-+?_=,<>/"
         for char in _forbidenChars:
             if char in field.data:
                 raise ValidationError(self.message)
@@ -30,19 +17,24 @@ class SymbolCheck:
 class ExistsInDbCheck:
     def __init__(self, table=None, message=None):
         if not message:
-            message = "Id of item doesn't exist."
+            message = "Id of item doesnt exist."
         self.message = message
         self.passedTable = table
 
     def __call__(self, form, field):
         table = self.passedTable
-        if table == None:
-            try:
+
+        try:
+            if table == None:
                 table = GetDbTableNameFromPassedValue(form.active_table.data)
-            except:
-                raise ValidationError("table doesn't exist")
-        else:
-            table = GetDbTableNameFromPassedValue(table)
+            else:
+                table = GetDbTableNameFromPassedValue(table)
+        except:
+            raise ValidationError("table doesnt exist")
+
+        if table == None:
+            raise ValidationError("table doesnt exist")
+
         exists = db.session.query(table).filter_by(
             id=field.data).first() is not None
         if not exists:
