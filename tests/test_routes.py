@@ -41,10 +41,10 @@ class TestBase(TestCase):
         db.session.add(it3)
         db.session.commit()
 
-
     def tearDown(self):
         db.session.remove()
         db.drop_all()
+
 
 class TestMainPages(TestBase):
     def test_read_get(self):
@@ -62,11 +62,13 @@ class TestMainPages(TestBase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(b"Update Page", response.data)
 
+
 class TestReadItemTypes(TestBase):
     def test_read_types(self):
         response = self.client.get(url_for("read_item_types"))
         self.assertEqual(response.status_code, 200)
         self.assertIn(b"Axe", response.data)
+
 
 class TestReadAttribute(TestBase):
     def test_read_attributes(self):
@@ -77,13 +79,22 @@ class TestReadAttribute(TestBase):
         self.assertIn(b"Sharp", response.data)
         self.assertIn(b"A sharp item", response.data)
 
+
 class TestReadItems(TestBase):
     def test_read_items(self):
         response = self.client.get(url_for("read_items"))
         self.assertEqual(response.status_code, 200)
         self.assertIn(b"Vicious Sword", response.data)
 
+
 class TestReadItem(TestBase):
+    def test_read_item_id_validation_out_of_range_id_passed_fails(self):
+        response = self.client.post(url_for("read_item"),
+                                    data=dict(item_id=999999),
+                                    follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"Id of item doesnt exist.", response.data)
+
     def test_read_item(self):
         response = self.client.post(
             url_for("read_item"),
@@ -97,6 +108,14 @@ class TestReadItem(TestBase):
 
 
 class TestAddType(TestBase):
+    def test_add_item_type_field_validation_name_doesnt_accept_symbols(self):
+        response = self.client.post(url_for("create_type"),
+                                    data=dict(item_type_name="$%!£"),
+                                    follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"No special characters or symbols allowed",
+                      response.data)
+
     def test_add_item_type(self):
         response = self.client.get(url_for("read_item_types"))
         self.assertNotIn(b"Mace", response.data)
@@ -110,7 +129,28 @@ class TestAddType(TestBase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(b"Mace", response.data)
 
+
 class TestAddAttribute(TestBase):
+    def test_add_attribute_field_validation_name_doesnt_accept_symbols(self):
+        response = self.client.post(
+            url_for("create_attribute"),
+            data=dict(attribute_name="@@@@@@@@@@@@&$^%$£",
+                      attribute_description="Forged by a divine being"),
+            follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"No special characters or symbols allowed",
+                      response.data)
+
+    def test_add_attribute_field_validation_description_doesnt_accept_symbols(self):
+        response = self.client.post(
+            url_for("create_attribute"),
+            data=dict(attribute_name="Divine",
+                      attribute_description="@@&&$@@@@@@@@@&$^%$£"),
+            follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"No special characters or symbols allowed",
+                      response.data)
+
     def test_add_item_type(self):
         response = self.client.get(url_for("read_attributes"))
         self.assertNotIn(b"Divine", response.data)
@@ -127,7 +167,25 @@ class TestAddAttribute(TestBase):
         self.assertIn(b"Divine", response.data)
         self.assertIn(b"Forged by a divine being", response.data)
 
+
 class TestAddItem(TestBase):
+    def test_add_item_name_field_validation_doesnt_accept_symbols(self):
+        response = self.client.post(url_for("create_item"),
+                                    data=dict(item_name="&^$*£^!}{@?~",
+                                              item_type=3),
+                                    follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"No special characters or symbols allowed",
+                      response.data)
+
+    def test_add_item_id_validation_out_of_range_id_passed_fails(self):
+        response = self.client.post(url_for("create_item"),
+                                    data=dict(item_name="Hand of Vecna",
+                                              item_type=989873459834597),
+                                    follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"Id of item doesnt exist.", response.data)
+
     def test_add_item(self):
         response = self.client.get(url_for("read_items"))
         self.assertNotIn(b"Hand of Vecna", response.data)
@@ -144,7 +202,22 @@ class TestAddItem(TestBase):
         self.assertIn(b"Hand of Vecna", response.data)
         self.assertIn(b"Tool", response.data)
 
+
 class TestAddItemAttribute(TestBase):
+    def test_add_item_attribute_validation_out_of_range_item_id_passed_fails(self):
+        response = self.client.post(url_for("create_attribute_link"),
+                                    data=dict(item_id=999999, attribute_id=2),
+                                    follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"Id of item doesnt exist.", response.data)
+
+    def test_add_item_attribute_validation_out_of_range_attribute_id_passed_fails(self):
+        response = self.client.post(url_for("create_attribute_link"),
+                                    data=dict(item_id=1, attribute_id=99999),
+                                    follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"Id of item doesnt exist.", response.data)
+
     def test_add_item_attribute(self):
         response = self.client.post(
             url_for("read_item"),
@@ -170,7 +243,22 @@ class TestAddItemAttribute(TestBase):
         self.assertIn(b"Sharp", response.data)
         self.assertIn(b"A sharp item", response.data)
 
+
 class TestDelete(TestBase):
+    def test_delete_item_id_validation_out_of_range_id_passed_fails(self):
+        response = self.client.post(url_for("delete"),
+                                    data=dict(active_table="Items", item_id=999999),
+                                    follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"Id of item doesnt exist.", response.data)
+
+    def test_delete_active_table_doesnt_exist_exception(self):
+        response = self.client.post(url_for("delete"),
+                                    data=dict(active_table="A fake table", item_id=1),
+                                    follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"table doesnt exist", response.data)
+
     def test_delete(self):
         response = self.client.get(url_for("read_items"))
         self.assertIn(b"Vicious Sword", response.data)
@@ -188,7 +276,25 @@ class TestDelete(TestBase):
         self.assertNotIn(b"Vicious Sword", response.data)
         self.assertNotIn(b"Sword", response.data)
 
+
 class TestUpdateType(TestBase):
+    def test_update_item_type_id_field_validation_out_of_range_id_passed_fails(self):
+        response = self.client.post(url_for("update_type"),
+                                    data=dict(item_type_id=99999,
+                                              new_type_name="Bow"),
+                                    follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"Id of item doesnt exist.", response.data)
+
+    def test_update_new_type_name_field_validation_name_doesnt_accept_symbols(self):
+        response = self.client.post(url_for("update_type"),
+                                    data=dict(item_type_id=1,
+                                              new_type_name="@!$%^"),
+                                    follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"No special characters or symbols allowed",
+                         response.data)
+
     def test_update_type(self):
         response = self.client.get(url_for("read_item_types"))
         self.assertEqual(response.status_code, 200)
@@ -204,8 +310,48 @@ class TestUpdateType(TestBase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(b"Bow", response.data)
 
+
 class TestUpdateAttribute(TestBase):
-    def test_update_attribute(self):
+    def test_update_attribute_id_field_validation_out_of_range_id_passed_fails(self):
+        response = self.client.post(
+            url_for("update_attribute"),
+            data=dict(
+                attribute_id=999999,
+                new_attribute_name="Butter Forged",
+                new_attribute_description=
+                "A magnificent item crafted through only the finest dairy products"
+            ),
+            follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"Id of item doesnt exist.", response.data)
+
+    def test_update_attribute_name_field_validation_name_doesnt_accept_symbols(self):
+        response = self.client.post(
+            url_for("update_attribute"),
+            data=dict(
+                attribute_id=1,
+                new_attribute_name="B@%()RR",
+                new_attribute_description=
+                "A magnificent item crafted through only the finest dairy products"
+            ),
+            follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"No special characters or symbols allowed",
+                         response.data)
+
+    def test_update_attribute_description_field_validation_name_doesnt_accept_symbols(self):
+        response = self.client.post(url_for("update_attribute"),
+                                    data=dict(
+                                        attribute_id=1,
+                                        new_attribute_name="Butter Forged",
+                                        new_attribute_description="B@%()RR"),
+                                    follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"No special characters or symbols allowed",
+                         response.data)
+
+
+    def test_update_attribute_success(self):
         response = self.client.get(url_for("read_attributes"))
         self.assertEqual(response.status_code, 200)
         self.assertNotIn(b"Butter Forged", response.data)
@@ -221,8 +367,25 @@ class TestUpdateAttribute(TestBase):
         self.assertIn(b"Butter Forged", response.data)
         self.assertIn(b"A magnificent item crafted through only the finest dairy products", response.data)
 
+
 class TestUpdateItem(TestBase):
-    def test_update_item(self):
+    def test_update_item_id_field_validation_out_of_range_id_passed_fails(self):
+        response = self.client.post(
+            url_for("update_item"),
+            data=dict(item_id=99999, new_item_name="Hand of Vecna"),
+            follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"Id of item doesnt exist.", response.data)
+
+    def test_update_item_field_validation_name_doesnt_accept_symbols(self):
+        response = self.client.post(
+            url_for("update_item"),
+            data=dict(item_id=99999, new_item_name="Hand of Vecna"),
+            follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn(b"No special characters or symbols allowed", response.data)
+
+    def test_update_item_success(self):
         response = self.client.get(url_for("read_items"))
         self.assertEqual(response.status_code, 200)
         self.assertNotIn(b"Hand of Vecna", response.data)
@@ -236,5 +399,31 @@ class TestUpdateItem(TestBase):
         self.assertEqual(response.status_code, 200)
         response = self.client.get(url_for("read_items"))
         self.assertIn(b"Hand of Vecna", response.data)
+        # self.assertIn(b"Tool", response.data)
 
 
+class TestValidationExceptions(TestBase):
+    def test_symbol_check_throws_exception(self):
+        response = self.client.get(url_for("create_item"))
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn(b"No special characters or symbols allowed", response.data)
+
+        response = self.client.post(
+            url_for("create_item"),
+            data = dict(item_name="@#:;!£$%^&*)(}{][", item_type=1),
+            follow_redirects = True
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"No special characters or symbols allowed", response.data)
+
+    def test_is_in_db_check_exception(self):
+        response = self.client.get(url_for("create_item"))
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn(b"Id of item doesn't exist.", response.data)
+
+        response = self.client.post(
+            url_for("create_item"),
+            data=dict(item_name="Eye of Vecna", item_type=9999999),
+            follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"Id of item doesnt exist", response.data)
