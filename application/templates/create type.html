@@ -1,0 +1,18 @@
+{% extends "create.html" %}
+{% block functionality %}
+    <div class="create_form">
+        <form method="POST" action="">
+            {{ create_form.hidden_tag() }}
+            {{ create_form.item_type_name.label }} {{ create_form.item_type_name }} <br>
+            {{ create_form.submit }}
+            {% if create_form.item_type_name.errors %}
+            <div class='error'>
+                {% for error in create_form.item_type_name.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <br>
+        </form>
+    </div>
+{% endblock functionality %}

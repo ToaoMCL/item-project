@@ -1,0 +1,28 @@
+{% extends "create.html" %}
+
+{% block functionality %}
+<div class="create_form">
+    <form method="POST" action="">
+        {{ create_form.hidden_tag() }}
+        {{ create_form.item_id.label }} {{ create_form.item_id }} <br>
+        {{ create_form.attribute_id.label }} {{ create_form.attribute_id }} <br>
+        {{ create_form.submit }}
+        {% if create_form.item_id.errors %}
+        <div class='error'>
+            {% for error in create_form.item_id.errors %}
+            <span>{{ error }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <br>
+        {% if create_form.attribute_id.errors %}
+        <div class='error'>
+            {% for error in create_form.attribute_id.errors %}
+            <span>{{ error }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <br>
+    </form>
+</div>
+{% endblock functionality %}

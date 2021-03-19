@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <h1>Read</h1>
+{% endblock title %}
+{% block sublinks %}
+<a href="/read/attributes">attributes</a>
+<a href="/read/item types">types</a>
+<a href="/read/items">items</a>
+<a href="/read/item">item</a>
+{% endblock sublinks %}
+
+
+{% block functionality %}
+<div class="read_item">
+    <form method="POST" action="">
+        {{ read_item.hidden_tag() }}
+        {{ read_item.item_id.label }} {{ read_item.item_id }} <br>
+        {{ read_item.submit }}
+        
+        {% if read_item.item_id.errors %}
+        <div class='error'>
+            {% for error in read_item.item_id.errors %}
+            <span>{{ error }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <br>       
+    </form>
+</div>
+{% for r in message %}
+{{r}} <br>
+{% endfor %}
+{% endblock functionality %}
+

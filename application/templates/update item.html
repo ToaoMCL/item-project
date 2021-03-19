@@ -1,0 +1,28 @@
+{% extends "update.html" %}
+
+{% block functionality %}
+    <div class="update_form">
+        <form method="POST" action="">
+            {{ update_form.hidden_tag() }}
+            {{ update_form.item_id.label }} {{ update_form.item_id }} <br>
+            {{ update_form.new_item_name.label }} {{ update_form.new_item_name }} <br>           
+            {{ update_form.submit }}
+            {% if update_form.item_id.errors %}
+            <div class='error'>
+                {% for error in update_form.item_id.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <br>
+            {% if update_form.new_item_name.errors %}
+            <div class='error'>
+                {% for error in update_form.new_item_name.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <br>
+        </form>
+    </div>
+{% endblock functionality %}

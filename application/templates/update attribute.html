@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block functionality %}
+    <div class="update_form">
+        <form method="POST" action="">
+            {{ update_form.hidden_tag() }}
+            {{ update_form.attribute_id.label }} {{ update_form.attribute_id }} <br>
+            {{ update_form.new_attribute_name.label }} {{ update_form.new_attribute_name }} <br>
+            {{ update_form.new_attribute_description.label }} {{ update_form.new_attribute_description }} <br>
+            {{ update_form.submit }}
+            {% if update_form.attribute_id.errors %}
+            <div class='error'>
+                {% for error in update_form.attribute_id.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <br>
+            {% if update_form.new_attribute_name.errors %}
+            <div class='error'>
+                {% for error in update_form.new_attribute_name.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <br>
+            {% if update_form.new_attribute_description.errors %}
+            <div class='error'>
+                {% for error in update_form.new_attribute_description.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <br>
+        </form>
+    </div>
+{% endblock functionality %}
