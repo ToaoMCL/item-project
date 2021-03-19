@@ -1,4 +1,4 @@
-# &nbsp; &nbsp;  Item Creator
+# &nbsp; &nbsp;  Item Creator V1.0.1
 
 ## About
 
